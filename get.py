@@ -184,7 +184,7 @@ def gen_go_mod(path):
 
 # 只用修改这个 url 即可
 # 比如题目链接为 https://leetcode-cn.com/problems/evaluate-division/ 就直接全部复制即可
-url = "https://leetcode-cn.com/problems/two-sum/"
+url = "https://leetcode-cn.com/problems/non-overlapping-intervals/"
 
 slug = url.replace("https://leetcode-cn.com/problems/", "", 1).strip('/')
 question = get_all(slug=slug)
