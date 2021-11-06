@@ -10,7 +10,7 @@ def isRobotBounded(instructions):
             res += 1
         else:
             res -= 1
-    if dir[0]-dir[2] ==0 or dir[3] - dir[1]==0: return False
-    return True
 
-print(isRobotBounded("GLGLGGLG"))
+    return (dir[0]-dir[2] == 0 and dir[3] - dir[1] == 0) or res%4 != 0
+
+print(isRobotBounded('GLGLGGLG'))
