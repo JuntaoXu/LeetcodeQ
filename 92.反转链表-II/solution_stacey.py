@@ -22,6 +22,8 @@ class Solution:
             cnt += 1
         start.next = prev
         tail.next = cur
+        # if reversing the list from the start, head is actually point to the end of the reversed
+        # list, and the actual start is the prev which is also the start of the reversed list
         if left > 1:
             return head
         else:
