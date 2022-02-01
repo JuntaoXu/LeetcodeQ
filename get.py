@@ -1,9 +1,8 @@
 import os
 import requests, json
 import re
+import datetime
 
-# 获取题目的方法来自下面的博客，并且添加了一些修改来更好地符合个人需要。
-# https://wanakiki.github.io/2020/leetcode-spider/
 Remove = ["</?p>", "</?ul>", "</?ol>", "</li>", "</sup>"]
 Replace = [["&nbsp;", " "], ["&quot;", '"'], ["&lt;", "<"], ["&gt;", ">"],
            ["&le;", "≤"], ["&ge;", "≥"], ["<sup>", "^"], ["&#39", "'"],
@@ -101,33 +100,15 @@ def get_problem_content(slug):
 
     return res + "\n"
 
-
-def get_solution_by_lang(slug, lang):
-    """
-        获取给定题目的对应语言的函数
-
-        支持的参数如下
-
-        C++ Java Python Python3 C C# JavaScript Ruby Swift Go Scala Kotlin
-        Rust PHP TypeScript Racket
-    """
-    question = get_all(slug)
-    # 获取对应语言的函数
-    codeSnippets = question['codeSnippets']
-    for x in codeSnippets:
-        if x['lang'] == lang:
-            return x['code']
-
-
 # 生成 markdown 文件
 def gen_markdown(path, content, title, url):
     file = open(path, 'a', encoding="utf-8")
     markdowncontenct = """# {titlename}
-[{Url}]({Url}) 
+[{Url}]({Url})
 ## 原题
 {Content}
 
-## 
+##
 ```go
 
 ```
@@ -138,61 +119,20 @@ def gen_markdown(path, content, title, url):
     file.close()
 
 
-# 生成 solution_test.go 文件
-def gen_gofile(path, title, url, func):
-    file = open(path, 'a', encoding="utf-8")
-    go_content = """package leetcode
-
-import (
-	"reflect"
-	"testing"
-)
-
-// {0}
-// {1}
-{2}
-func TestSolution(t *testing.T) {{
-	testCases := []struct {{
-		desc string
-		want 
-	}}{{
-		{{
-            want: ,
-		}},
-	}}
-	for _, tC := range testCases {{
-		t.Run(tC.desc, func(t *testing.T) {{
-			get := 
-			if !reflect.DeepEqual(tC.want,get){{
-				t.Errorf("input: %+v get: %v\\n",tC,get)
-			}}
-		}})
-	}}
-}}
-""".format(title.replace(" ", ""), url, func)
-    file.write(go_content)
-    print(path)
-    file.close()
-
-
-# 生成 go.mod 文件
-def gen_go_mod(path):
-    file = open(path, 'a', encoding="utf-8")
-    file.write("module leetcode\ngo 1.15")
-    file.close()
-
-
-# 只用修改这个 url 即可
-# 比如题目链接为 https://leetcode-cn.com/problems/evaluate-division/ 就直接全部复制即可
-url = "https://leetcode-cn.com/problems/robot-bounded-in-circle/"
+url = "https://leetcode-cn.com/problems/reverse-only-letters/"
 
 slug = url.replace("https://leetcode-cn.com/problems/", "", 1).strip('/')
 question = get_all(slug=slug)
-title = question['questionFrontendId'] + '.' + question['translatedTitle']
+
+
+current = datetime.datetime.now()
+print(current)
+date = str(current).split(" ")[0]
+
+title = date + '.' + question['questionFrontendId'] + '.' + question['translatedTitle']
 
 content = get_problem_content(slug)
 
-func = get_solution_by_lang(slug, 'Python3')
 content = re.sub(r'\n\n\n\n*', "\n", content)  # 替换掉多个换行符
 
 base_dir = os.getcwd()
@@ -203,14 +143,12 @@ if not os.path.exists(newfolder):
 else:
     print("already exist folder:", newfolder)
 
+f0 = os.path.join(base_dir, newfolder, 'solution_juntao.py')
+f1 = os.path.join(base_dir, newfolder, 'solution_stacey.py')
+
+open(f0, 'a').close()
+open(f1, 'a').close()
+
 # 生成 markdown 文件
 filepath = os.path.join(base_dir, newfolder, "README.md")
 gen_markdown(filepath, content, title, url)
-
-# 生成 solution_test.go 文件
-filepath = os.path.join(base_dir, newfolder, "solution_test.go")
-gen_gofile(filepath, title, url, func)
-
-# 生成 go.mod 文件
-filepath = os.path.join(base_dir, newfolder, "go.mod")
-gen_go_mod(filepath)
