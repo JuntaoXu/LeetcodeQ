@@ -119,7 +119,7 @@ def gen_markdown(path, content, title, url):
     file.close()
 
 
-url = "https://leetcode-cn.com/problems/lucky-numbers-in-a-matrix/"
+url = "https://leetcode-cn.com/problems/pancake-sorting/"
 
 slug = url.replace("https://leetcode-cn.com/problems/", "", 1).strip('/')
 question = get_all(slug=slug)
